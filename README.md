@@ -1,17 +1,27 @@
 # Circuit Simulation Algorithms CE530 #
 
+Implementation of a state-of-the-art SPICE-like simulation tool, that can simulate efficiently and fast, very large circuits with hundreds of thousand nodes and simulation variables.
 
-### This repository contains our work in this course. ###
+## Features ##
 
-### Enviroment: ###
-* Programming Language: **C**
+The simulation tool provides the following operations/analyses:
 
-### Members: ###
-* Tsakiris Tryfon
-* Badakis Ioannis
-* Katsaros Nikos
+* **DC analysis**
+    * direct methods (LU, Cholesky)
+    * iterative methods (Bi-/Conjugate Gradient)
 
-## Dependencies: ##
+* **Transient analysis**
+    * Backward Euler
+    * Trapezoidal method
+
+* **AC analysis**
+    * direct methods (LU, Cholesky) with complex numbers 
+    * iterative methods (Bi-/Conjugate Gradient) with complex numbers
+
+Additionally, the simulation tool can make use of **sparse** matrices in order to hadnle very large circuits in memory.
+
+## Dependencies ##
+
 This project requires `GSL` library to be installed for **C**.  
 In order to plot the transient analysis `matplotlib` for **python** is also required.
 

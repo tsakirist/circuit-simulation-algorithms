@@ -2,7 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 
-/* This header includes all the reuqired headers of our implementation files */
+/* This header includes all the required headers of our implementation files */
 #include "main.h"
 
 #define HASH_TABLE_SIZE 59999
@@ -37,7 +37,6 @@ int main(int argc, char *argv[]) {
     /* Create the MNA system */
     create_mna_system(mna, index, hash_table, parser->options, parser->tr_analysis->time_step, parser->netlist->num_nodes);
     
-    /* Print the MNA system */
     /* Dimension of MNA system */
     int dimension = parser->netlist->num_nodes + parser->netlist->num_g2_elem;
 

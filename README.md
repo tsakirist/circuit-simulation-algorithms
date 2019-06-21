@@ -1,6 +1,6 @@
 # Circuit Simulation Algorithms CE530 #
 
-Implementation of a state-of-the-art SPICE-like simulation tool, that can simulate efficiently and fast, very large circuits with hundreds of thousand nodes and simulation variables.
+Implementation of a state-of-the-art SPICE-like simulation tool, that can simulate efficiently and fast, very large circuits with hundreds of thousand of nodes and simulation variables.
 
 ## Features ##
 

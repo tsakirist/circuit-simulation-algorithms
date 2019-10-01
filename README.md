@@ -18,7 +18,7 @@ The simulation tool provides the following operations/analyses:
     * direct methods (LU, Cholesky) with complex numbers 
     * iterative methods (Bi-/Conjugate Gradient) with complex numbers
 
-Additionally, the simulation tool can make use of **sparse** matrices in order to hadnle very large circuits in memory.
+Additionally, the simulation tool can make use of **SPARSE** matrices in order to handle very large circuits in memory.
 
 ## Dependencies ##
 

@@ -8,137 +8,137 @@
 
 /* Create a new hash_table */
 hash_table_t *ht_create(int size) {
-	hash_table_t *hash_table = NULL;
-	int i;
-	if (size < 1) {
-		return NULL;
-	}
-	/* Allocate the table itself */
-	hash_table = (hash_table_t *)malloc(sizeof(hash_table_t));
-	if (hash_table == NULL) {
-		fprintf(stderr, "Couldn't allocate memory!\n");
-		return NULL;
-	}
-	/* Allocate pointers to the head nodes */
-	hash_table->table = (entry_t **)malloc(size * sizeof(entry_t *));
-	if (hash_table->table == NULL) {
-		free(hash_table);
-		return NULL;
-	}
-	for (i = 0; i < size; i++) {
-		hash_table->table[i] = NULL;
-	}
-	hash_table->size = size;
-	hash_table->seq  = 1;
-	return hash_table;	
+    hash_table_t *hash_table = NULL;
+    int i;
+    if (size < 1) {
+        return NULL;
+    }
+    /* Allocate the table itself */
+    hash_table = (hash_table_t *)malloc(sizeof(hash_table_t));
+    if (hash_table == NULL) {
+        fprintf(stderr, "Couldn't allocate memory!\n");
+        return NULL;
+    }
+    /* Allocate pointers to the head nodes */
+    hash_table->table = (entry_t **)malloc(size * sizeof(entry_t *));
+    if (hash_table->table == NULL) {
+        free(hash_table);
+        return NULL;
+    }
+    for (i = 0; i < size; i++) {
+        hash_table->table[i] = NULL;
+    }
+    hash_table->size = size;
+    hash_table->seq  = 1;
+    return hash_table;    
 }
 
 /* Hash a string for a particular hash table */
 int ht_hash( hash_table_t *hash_table, char *key ) {
-	unsigned long hash = 5381;
-	int c;
-	while ((c = *key++))
-		hash = ((hash << 5) + hash) + c;  /* hash * 33 + c */
-	return hash % hash_table->size;
+    unsigned long hash = 5381;
+    int c;
+    while ((c = *key++))
+        hash = ((hash << 5) + hash) + c;  /* hash * 33 + c */
+    return hash % hash_table->size;
 }
 
 /* Create a new node */
 entry_t *ht_new_node(hash_table_t *hash_table, char *key) {
-	entry_t *new_node = (entry_t *)malloc(sizeof(entry_t));
-	if (new_node == NULL) {
-		fprintf(stderr, "Couldn't allocate memory!\n");
-		return NULL;
-	}
-	if ((new_node->key = strdup(key)) == NULL) {
-		fprintf(stderr, "Couldn't allocate memory!\n");
-		return NULL;
-	}
-	/* Give to ground the id 0 */
-	if (strcmp(key, "0") == 0) {
-		new_node->id = 0;
-	}
-	else {
-		new_node->id = hash_table->seq;
-		hash_table->seq++;
-	}
-	new_node->next = NULL;
-	return new_node;
+    entry_t *new_node = (entry_t *)malloc(sizeof(entry_t));
+    if (new_node == NULL) {
+        fprintf(stderr, "Couldn't allocate memory!\n");
+        return NULL;
+    }
+    if ((new_node->key = strdup(key)) == NULL) {
+        fprintf(stderr, "Couldn't allocate memory!\n");
+        return NULL;
+    }
+    /* Give to ground the id 0 */
+    if (strcmp(key, "0") == 0) {
+        new_node->id = 0;
+    }
+    else {
+        new_node->id = hash_table->seq;
+        hash_table->seq++;
+    }
+    new_node->next = NULL;
+    return new_node;
 }
 
 /* Insert a key-value pair into a hash table */
 void ht_set(hash_table_t *hash_table, char *key) {
-	int bin = 0;
-	bin = ht_hash(hash_table, key);
-	entry_t *new_node = NULL;
-	entry_t *curr = NULL;
-	entry_t *last = NULL;
-	curr = hash_table->table[bin];
-	/* In case its empty create new node */
-	if (curr == NULL) {
-		new_node = ht_new_node(hash_table, key);
+    int bin = 0;
+    bin = ht_hash(hash_table, key);
+    entry_t *new_node = NULL;
+    entry_t *curr = NULL;
+    entry_t *last = NULL;
+    curr = hash_table->table[bin];
+    /* In case its empty create new node */
+    if (curr == NULL) {
+        new_node = ht_new_node(hash_table, key);
 #ifdef DEBUGH
-		printf("Inserted new node with key: %s and id: %d at bin: %d\n", key, new_node->id, bin);
+        printf("Inserted new node with key: %s and id: %d at bin: %d\n", key, new_node->id, bin);
 #endif
-		hash_table->table[bin] = new_node;
-		return;
-	}
-	else {
-		for (; curr != NULL; curr = curr->next) {
-			if (strcmp(key, curr->key) == 0) {
-				/* Means we have already stored that string */
+        hash_table->table[bin] = new_node;
+        return;
+    }
+    else {
+        for (; curr != NULL; curr = curr->next) {
+            if (strcmp(key, curr->key) == 0) {
+                /* Means we have already stored that string */
 #ifdef DEBUGH
-				printf("Key: %s, has already been stored.\n", key);
+                printf("Key: %s, has already been stored.\n", key);
 #endif
-				return;
-			}
-			last = curr;
-		}
-	}
-	/* Last contains the last node in the list */
-	new_node = ht_new_node(hash_table, key);
-	if (new_node == NULL) {
-		printf("Something went wrong\n");
-		return;
-	}
-	last->next = new_node;
+                return;
+            }
+            last = curr;
+        }
+    }
+    /* Last contains the last node in the list */
+    new_node = ht_new_node(hash_table, key);
+    if (new_node == NULL) {
+        printf("Something went wrong\n");
+        return;
+    }
+    last->next = new_node;
 #ifdef DEBUGH
-	printf("Inserted new node at the end of list at bin: %d with key: %s and id: %d\n", bin, key, new_node->id);
+    printf("Inserted new node at the end of list at bin: %d with key: %s and id: %d\n", bin, key, new_node->id);
 #endif
 }
 
 /* Retrieve a key-value pair from the hash table */
 int ht_get_id(hash_table_t *hash_table, char *key) {
-	int bin = 0;
-	entry_t *curr = NULL;
-	bin = ht_hash(hash_table, key);
-	/* Step through the bin, looking for our value */
-	curr = hash_table->table[bin];
-	while (curr != NULL && strcmp(key, curr->key) != 0) {
-		curr = curr->next;
-	}
-	if (curr == NULL) {
-		return -1;
-	}
-	else {
-		return curr->id;
-	}
+    int bin = 0;
+    entry_t *curr = NULL;
+    bin = ht_hash(hash_table, key);
+    /* Step through the bin, looking for our value */
+    curr = hash_table->table[bin];
+    while (curr != NULL && strcmp(key, curr->key) != 0) {
+        curr = curr->next;
+    }
+    if (curr == NULL) {
+        return -1;
+    }
+    else {
+        return curr->id;
+    }
 }
 
 /* Free the memory allocated */
 void ht_free(hash_table_t **hash_table) {
-	entry_t *curr, *prev;
-	/* Cycle through the hash_table */
-	for (int i = 0; i < (*hash_table)->size; i++) {
-		curr = (*hash_table)->table[i];
-		/* Free every node in the list in a cell of the hash_table */
-		while (curr != NULL) {
-			prev = curr;
-			curr = curr->next;
-			free(prev->key);
-			free(prev);
-		}
-	}
-	free((*hash_table)->table);
-	free(*hash_table);
-	*hash_table = NULL;
+    entry_t *curr, *prev;
+    /* Cycle through the hash_table */
+    for (int i = 0; i < (*hash_table)->size; i++) {
+        curr = (*hash_table)->table[i];
+        /* Free every node in the list in a cell of the hash_table */
+        while (curr != NULL) {
+            prev = curr;
+            curr = curr->next;
+            free(prev->key);
+            free(prev);
+        }
+    }
+    free((*hash_table)->table);
+    free(*hash_table);
+    *hash_table = NULL;
 }

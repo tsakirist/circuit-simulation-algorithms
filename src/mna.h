@@ -14,98 +14,98 @@
 
 /* Holds the transient response and the nodes that contribute to it */
 typedef struct resp {
-	double  *value;
-	list1_t **nodes;
+    double  *value;
+    list1_t **nodes;
 } resp_t;
 
 /* Holds the dense representation of the MNA */
 typedef struct matrix {
-	/* Main Matrix of the MNA for DC */
-	double **A;
-	/* A_base is A before factorization */
-	double **A_base;
+    /* Main Matrix of the MNA for DC */
+    double **A;
+    /* A_base is A before factorization */
+    double **A_base;
 
-	/* Permutation for LU factorizations either complex or normal */
-	gsl_permutation *P;
+    /* Permutation for LU factorizations either complex or normal */
+    gsl_permutation *P;
 
-	/* Matrices for the Transient Analysis */
-	double **hC;
-	/* aGhC = G + hC, G = A */
-	double **aGhC;
-	/* aGhC = G - hC, G = A */
-	double **sGhC;
+    /* Matrices for the Transient Analysis */
+    double **hC;
+    /* aGhC = G + hC, G = A */
+    double **aGhC;
+    /* aGhC = G - hC, G = A */
+    double **sGhC;
 
-	/* Complex matrix G for the AC Analysis and RHS vector */
-	gsl_matrix_complex *G_ac;
-	gsl_vector_complex *e_ac;
+    /* Complex matrix G for the AC Analysis and RHS vector */
+    gsl_matrix_complex *G_ac;
+    gsl_vector_complex *e_ac;
 } matrix_t;
 
 /* Holds the sparse representation of the MNA */
 typedef struct sp_matrix {
-	/* Main Matrix of the MNA for DC */
-	cs *A;
-	/* The A matrix before any modifications to use in AC analysis */
-	cs *A_base;
+    /* Main Matrix of the MNA for DC */
+    cs *A;
+    /* The A matrix before any modifications to use in AC analysis */
+    cs *A_base;
 
-	/* Matrices for the Transient Analysis */
-	cs *hC;
-	/* aGhC = G + hC, G = A */
-	cs *aGhC;
-	/* aGhC = G - hC, G = A */
-	cs *sGhC;
+    /* Matrices for the Transient Analysis */
+    cs *hC;
+    /* aGhC = G + hC, G = A */
+    cs *aGhC;
+    /* aGhC = G - hC, G = A */
+    cs *sGhC;
 
-	/* Hold the symbolic and numeric representation of the LU factorization */
-	css *A_symbolic;
-	csn *A_numeric;
+    /* Hold the symbolic and numeric representation of the LU factorization */
+    css *A_symbolic;
+    csn *A_numeric;
 
-	/* Sparse data structures for AC analysis */
-	cs_ci *G_ac;
+    /* Sparse data structures for AC analysis */
+    cs_ci *G_ac;
 
-	/* This is necessary for the sparse routines, instead of using gsl complex */
-	cs_complex_t *e_ac;
+    /* This is necessary for the sparse routines, instead of using gsl complex */
+    cs_complex_t *e_ac;
 
-	/* Hold the symbolic and numeric representation of the LU factorization */
-	cs_cis *G_ac_symbolic;
-	cs_cin *G_ac_numeric;
+    /* Hold the symbolic and numeric representation of the LU factorization */
+    cs_cis *G_ac_symbolic;
+    cs_cin *G_ac_numeric;
 } sp_matrix_t;
 
 /* Keeps the indexing for the sources of group 2 */
 typedef struct g2_indx {
-	char *element;
+    char *element;
 } g2_indx_t;
 
 typedef struct mna_system {
-	/* Pointers to the dense and sparse matrix of the MNA */
-	matrix_t 	*matrix;
-	sp_matrix_t *sp_matrix;
+    /* Pointers to the dense and sparse matrix of the MNA */
+    matrix_t     *matrix;
+    sp_matrix_t *sp_matrix;
 
-	/* Pointer to the transient response and the nodes that contribute to it */
-	resp_t *resp;
+    /* Pointer to the transient response and the nodes that contribute to it */
+    resp_t *resp;
 
-	/* Jacobi Preconditioner M, we only store the diagonal of A not zeros */
-	/* For DC and TRANSIENT analysis */
-	double *M;
-	double *M_trans;
-	/* For AC analysis */
-	gsl_vector_complex *M_ac;
-	gsl_vector_complex *M_ac_conj;
+    /* Jacobi Preconditioner M, we only store the diagonal of A not zeros */
+    /* For DC and TRANSIENT analysis */
+    double *M;
+    double *M_trans;
+    /* For AC analysis */
+    gsl_vector_complex *M_ac;
+    gsl_vector_complex *M_ac_conj;
 
-	/* Right hand side vector b for the Ax=b */
-	double *b;
+    /* Right hand side vector b for the Ax=b */
+    double *b;
 
-	/* General info about MNA */
-	bool is_decomp;
-	int dimension;
-	int num_nodes;
+    /* General info about MNA */
+    bool is_decomp;
+    int dimension;
+    int num_nodes;
 
-	/* Keep some info about g2 elements */
-	int num_g2_elem;
-	g2_indx_t *g2_indx;
+    /* Keep some info about g2 elements */
+    int num_g2_elem;
+    g2_indx_t *g2_indx;
 
-	//TODO change the below flag names or create a new enum called current state? or something
-	/* Flags that indicate in which analysis we're currently at */
-	bool tr_analysis_init;
-	bool ac_analysis_init;
+    //TODO change the below flag names or create a new enum called current state? or something
+    /* Flags that indicate in which analysis we're currently at */
+    bool tr_analysis_init;
+    bool ac_analysis_init;
 } mna_system_t;
 
 mna_system_t *init_mna_system(int num_nodes, int num_g2_elem, options_t *options, int nz);

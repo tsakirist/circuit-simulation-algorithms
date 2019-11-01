@@ -2,15 +2,15 @@
 #define HASH_TABLE_H
 
 typedef struct entry {
-	char *key;
-	unsigned int id;
-	struct entry *next;
+    char *key;
+    unsigned int id;
+    struct entry *next;
 } entry_t;
 
 typedef struct hash_table {
-	unsigned int size;
-	unsigned int seq;
-	entry_t **table;
+    unsigned int size;
+    unsigned int seq;
+    entry_t **table;
 } hash_table_t;
 
 hash_table_t *ht_create(int size);

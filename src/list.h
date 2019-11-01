@@ -7,8 +7,8 @@
 #include "trans_spec.h"
 #include "ac_spec.h"
 
-#define SUCCESS	 1
-#define FAILURE	-1
+#define SUCCESS  1
+#define FAILURE -1
 
 /* 
  * List1 will contain the following elements:
@@ -19,15 +19,15 @@
  * I: Current Source
  */
 typedef struct list1 {
-	char type;
-	char *element;
-	char *probe1;
-	char *probe2;
-	long double value;
-	trans_spec_t *trans_spec;
-	ac_spec_t    *ac_spec;
-	struct list1 *next;
-	struct list1 *prev;
+    char type;
+    char *element;
+    char *probe1;
+    char *probe2;
+    long double value;
+    trans_spec_t *trans_spec;
+    ac_spec_t    *ac_spec;
+    struct list1 *next;
+    struct list1 *prev;
 } list1_t;
 
 /* 
@@ -37,30 +37,30 @@ typedef struct list1 {
  * D: Diode
  */
 typedef struct list2 {
-	char type;
-	char *element;
-	char *probe1;
-	char *probe2;
-	char *probe3;
-	char *probe4;
-	int model_name;
-	int area;	
-	long double length;
-	long double width;
-	struct list2 *next;
-	struct list2 *prev;
+    char type;
+    char *element;
+    char *probe1;
+    char *probe2;
+    char *probe3;
+    char *probe4;
+    int model_name;
+    int area;    
+    long double length;
+    long double width;
+    struct list2 *next;
+    struct list2 *prev;
 } list2_t;
 
 /* Index that contains both of our lists */
 typedef struct index {
-	/* Pointers to the head and tail of the list1 */
-	list1_t *head1;
-	list1_t *tail1;
-	/* Pointers to the head and tail of the list2 */
-	list2_t *head2;
-	list2_t *tail2;
-	unsigned int size1;
-	unsigned int size2;
+    /* Pointers to the head and tail of the list1 */
+    list1_t *head1;
+    list1_t *tail1;
+    /* Pointers to the head and tail of the list2 */
+    list2_t *head2;
+    list2_t *tail2;
+    unsigned int size1;
+    unsigned int size2;
 } index_t;
 
 index_t *init_lists();

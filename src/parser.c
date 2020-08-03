@@ -113,11 +113,11 @@ char **tokenizer(char *line) {
     token = strtok(line, delim);
 
     while (token != NULL && i <= num_tokens) {
-    tokens[i] = (char *)malloc((strlen(token) + 1) * sizeof(char));
-    assert(tokens[i] != NULL);
-    strcpy(tokens[i], token);
-    token = strtok(NULL, delim);
-    i++;
+        tokens[i] = (char *)malloc((strlen(token) + 1) * sizeof(char));
+        assert(tokens[i] != NULL);
+        strcpy(tokens[i], token);
+        token = strtok(NULL, delim);
+        i++;
     }
     /* Trim '\n' if necessary */
     if (tokens[i-1][strlen(tokens[i-1])-1] == '\n') {
@@ -186,7 +186,7 @@ void parse_netlist(parser_t *parser, char *file_name, index_t *index, hash_table
             else if (strcasecmp(".AC", &tokens[1][0]) == 0) {
                 if (strcasecmp(tokens[2], "LIN") == 0) {
                     parser->ac_analysis[ac_counter].sweep = LIN;
-                } 
+                }
                 else {
                     parser->ac_analysis[ac_counter].sweep = LOG;
                 }
@@ -430,7 +430,7 @@ void free_parser(parser_t **parser) {
         }
     }
     /* Free the tr_analysis struct */
-    free((*parser)->tr_analysis);  
+    free((*parser)->tr_analysis);
 
     /* Free everything allocated for AC analysis */
     if ((*parser)->netlist->ac_counter) {
@@ -443,7 +443,7 @@ void free_parser(parser_t **parser) {
         }
     }
     /* Free the tr_analysis struct */
-    free((*parser)->ac_analysis); 
+    free((*parser)->ac_analysis);
 
     /* Free netlist struct */
     free((*parser)->netlist);

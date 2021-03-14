@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FormatStrFormatter
 import re
 import os
 import sys
@@ -33,12 +34,12 @@ def plot_dc_or_transient_file(filename, ax_tr):
 
     # Get the Node name from the output file
     if "dc" in filename:
-        v_label = filename.split("_")[3]
+        v_label = filename.split('_')[3]
     else:
-        v_label = filename.split("_")[2]
+        v_label = filename.split('_')[2]
 
-    with open(filename, 'rb') as fd:
-        lines = [x.strip("\n") for x in fd.readlines()]
+    with open(filename, 'r') as fd:
+        lines = [x.strip('\n') for x in fd.readlines()]
 
     step_list = []
     val_list  = []
@@ -64,10 +65,10 @@ def plot_ac_file(filename, ax_ac_1, ax_ac_2, sweep, last):
     """
 
     # Get the Node name and the sweep type from the output file
-    v_label  = filename.split("_")[2]
+    v_label  = filename.split('_')[2]
 
-    with open(filename, 'rb') as fd:
-        lines = [x.strip("\n") for x in fd.readlines()]
+    with open(filename, 'r') as fd:
+        lines = [x.strip('\n') for x in fd.readlines()]
 
     freq_list  = []
     magn_list  = []
@@ -103,7 +104,7 @@ def set_xticks(freq_list, ax_ac_1, ax_ac_2):
     """
 
     # Convert list from string to float and finally to int
-    freq_list = map(int, map(float, freq_list))
+    freq_list = list(map(int, map(float, freq_list)))
 
     # In case we're dealing with numbers below 0 better let the x_axis as is from pyplot
     if freq_list.count(0) > 2:
@@ -137,6 +138,8 @@ def plot_analyses(analyses, paths):
     tr_files = analyses.get("TRAN")
     ac_files = analyses.get("AC")
 
+    decimalFormatter = FormatStrFormatter('%.4f')
+
     # AC Analysis plot/figure
     if len(ac_files):
         sweep = get_sweep(ac_files)
@@ -145,10 +148,13 @@ def plot_analyses(analyses, paths):
         ax_ac_1.set_xlabel("Frequency (Hz)")
         ax_ac_1.set_ylabel(r"Phase ($^0$)")
         ax_ac_2.set_xlabel("Frequency (Hz)")
-        if sweep == "LIN":
-            ax_ac_2.set_ylabel("Magnitude (V)")
-        else:
-            ax_ac_2.set_ylabel("Magnitude (dB)")
+        ax_ac_2.set_ylabel("Magnitude " + "(V)" if sweep == "LIN" else "(dB)")
+        ax_ac_1.xaxis.set_major_formatter(decimalFormatter)
+        ax_ac_1.yaxis.set_major_formatter(decimalFormatter)
+        ax_ac_2.xaxis.set_major_formatter(decimalFormatter)
+        ax_ac_2.yaxis.set_major_formatter(decimalFormatter)
+        ax_ac_2.tick_params(axis='x', labelrotation=45)
+        ax_ac_1.tick_params(axis='x', labelrotation=45)
         fig_ac_suffix = "_AC_Analysis"
 
         # Plot everything into a figure
@@ -173,6 +179,9 @@ def plot_analyses(analyses, paths):
         fig_tr.suptitle("Transient Analysis")
         ax_tr.set_xlabel("Time (s)")
         ax_tr.set_ylabel("Voltage (V)")
+        ax_tr.xaxis.set_major_formatter(decimalFormatter)
+        ax_tr.yaxis.set_major_formatter(decimalFormatter)
+        ax_tr.tick_params(axis='x', labelrotation=45)
         fig_tr_suffix = "_Transient_Analysis"
 
         # Plot everything into a figure
@@ -194,6 +203,9 @@ def plot_analyses(analyses, paths):
         fig_dc.suptitle("DC Sweep Analysis")
         ax_dc.set_xlabel("Voltage sweep (V)")
         ax_dc.set_ylabel("Voltage (V)")
+        ax_dc.xaxis.set_major_formatter(decimalFormatter)
+        ax_dc.yaxis.set_major_formatter(decimalFormatter)
+        ax_dc.tick_params(axis='x', labelrotation=45)
         fig_dc_suffix = "_DC_Sweep_Analysis"
 
         # Plot everything into a figure
@@ -259,7 +271,7 @@ def check_analyses(analyses):
     """
 
     if not any(analyses.values()):
-        print "Error: Can't find any output files either from DC, TRAN or AC analysis."
+        print("Error: Can't find any output files either from DC, TRAN or AC analysis.")
         sys.exit(0)
 
 
@@ -278,8 +290,8 @@ def get_sweep(ac_files):
             break
 
     if sweep is None:
-        print "Error: Sweep type from output file is wrong."
-        print "Valid options (LIN, LOG)."
+        print("Error: Sweep type from output file is wrong.")
+        print("Valid options (LIN, LOG).")
         sys.exit(0)
 
     return sweep
@@ -313,7 +325,7 @@ def get_paths_create_folders(analyses):
             os.makedirs(path)
 
     if flag:
-        print "\nCreating plot directories..........OK",
+        print("Creating plot directories..........OK")
 
     return paths
 
@@ -328,11 +340,11 @@ def main():
 
     paths = get_paths_create_folders(analyses)
 
-    print "\nPlotting requested analyses........OK",
+    print("Plotting requested analyses........OK")
 
     plot_analyses(analyses, paths)
 
-    print "\nSaving figures to directories......OK"
+    print("Saving figures to directories......OK")
 
 
 if __name__ == '__main__':

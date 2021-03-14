@@ -3,6 +3,8 @@
 
 #include "transient_analysis.h"
 
+#define MAX_FILE_NAME 100
+
 /* TRAN analysis and outputs the result to file(s) */
 void tr_analysis(index_t *index, hash_table_t *hash_table, mna_system_t *mna, parser_t *parser, double *dc_op, double *sol_x) {
     /* Set the flag that we're currently on an Transient analysis */
@@ -133,7 +135,7 @@ void init_transient_state(mna_system_t *mna, parser_t *parser, int dimension) {
 /*
  * Computes and stores the right hand side of the trapezoidal method at vector mna->b
  * h: is time_step and k: is the current iteration
- */ 
+ */
 void set_trapezoidal_rhs(mna_system_t *mna, double *curr_response, double *prev_response, double *prev_sol, double h, int k, bool SPARSE) {
     /* curr_response is e(tk) and prev_response is e(tk-1) */
     /* Set the values of the e(tk) vector */
@@ -158,7 +160,7 @@ void set_trapezoidal_rhs(mna_system_t *mna, double *curr_response, double *prev_
     free(sGhc_x);
 }
 
-/* 
+/*
  * Computes and stores the right hand side of the backward euler method at vector mna->b
  * h: is time_step and k: is the current iteration
  */

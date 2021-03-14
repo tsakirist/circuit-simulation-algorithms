@@ -5,6 +5,8 @@
 
 #include "ac_analysis.h"
 
+#define MAX_FILE_NAME 100
+
 /* AC analysis and outputs the result to file(s) */
 void ac_analysis(index_t *index, hash_table_t *hash_table, mna_system_t *mna, parser_t *parser,
                  double *dc_op, gsl_vector_complex *sol_x) {

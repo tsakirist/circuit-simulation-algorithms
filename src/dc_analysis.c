@@ -5,6 +5,8 @@
 
 #include "dc_analysis.h"
 
+#define MAX_FILE_NAME 100
+
 /* DC Operating Point Analysis and prints the output to a file */
 void dc_operating_point(hash_table_t *hash_table, double *sol_x) {
     entry_t *curr;

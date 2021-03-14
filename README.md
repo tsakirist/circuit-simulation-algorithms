@@ -15,14 +15,14 @@ The simulation tool provides the following operations/analyses:
     * Trapezoidal method
 
 * **AC analysis**
-    * direct methods (LU, Cholesky) with complex numbers 
+    * direct methods (LU, Cholesky) with complex numbers
     * iterative methods (Bi-/Conjugate Gradient) with complex numbers
 
 Additionally, the simulation tool can make use of **SPARSE** matrices in order to handle very large circuits in memory.
 
 ## Dependencies ##
 
-This project requires `GSL` library to be installed for **C**.  
+This project requires `GSL` library to be installed for **C**.
 In order to plot the transient analysis `matplotlib` for **python** is also required.
 
 
@@ -36,5 +36,5 @@ or  manually
 
 ```bash
 1. sudo apt install libgsl0-dev
-2. sudo apt install python-matplotlib
+2. sudo apt install python3-matplotlib
 ```

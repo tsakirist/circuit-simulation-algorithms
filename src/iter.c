@@ -5,10 +5,10 @@
 
 #include "iter.h"
 
-/* 
+/*
  * Solve the SPD system with the iterative conjugate gradient method
  * store the result in vector x and also return the number of iterations
- */ 
+ */
 int conj_grad(double **A, cs *C, double *x, double *b, double *M, int dimension, double itol, int maxiter, bool SPARSE) {
     double *Ax = (double *)malloc(dimension * sizeof(double));
     /* Residual vector r */
@@ -28,7 +28,7 @@ int conj_grad(double **A, cs *C, double *x, double *b, double *M, int dimension,
         /* Compute A*x and store it ot Ax , C is CCF of A */
         cs_mat_vec_mul(Ax, C, x);
     }
-    
+
     /* Compute r = b - Ax */
     sub_vector(r, b, Ax, dimension);
 
@@ -81,10 +81,10 @@ int conj_grad(double **A, cs *C, double *x, double *b, double *M, int dimension,
     return iter;
 }
 
-/* 
+/*
  * Solve the complex SPD system with the iterative conjugate gradient method
  * store the result in vector x and also return the number of iterations
- */ 
+ */
 int complex_conj_grad(gsl_matrix_complex *A, cs_ci *C, gsl_vector_complex *x, gsl_vector_complex *b,
                        gsl_vector_complex *M, int dimension, double itol, int maxiter, bool SPARSE) {
     gsl_vector_complex *Ax = init_gsl_complex_vector(dimension);
@@ -105,7 +105,7 @@ int complex_conj_grad(gsl_matrix_complex *A, cs_ci *C, gsl_vector_complex *x, gs
         /* Compute A*x and store it to Ax, with Hermitian of A conjugate+transpose */
         gsl_blas_zgemv(CblasNoTrans, GSL_COMPLEX_ONE, A, x, GSL_COMPLEX_ZERO, Ax);
     }
-    
+
     /* Compute r = b - Ax */
     /* Computes the y = ax + b, we want r = -Ax + b */
     complex_axpy(r, GSL_COMPLEX_NEGONE, Ax, b, dimension);
@@ -160,11 +160,11 @@ int complex_conj_grad(gsl_matrix_complex *A, cs_ci *C, gsl_vector_complex *x, gs
     return iter;
 }
 
-/* 
+/*
  * Solve the system with the iterative bi-conjugate gradient method
  * store the result in vector x and also return the number of iterations
  * or FAILURE in case it fails
- */ 
+ */
 int bi_conj_grad(double **A, cs *C, double *x, double *b, double *M, int dimension, double itol, int maxiter, bool SPARSE) {
     /* Set maxiter to our threshold in case the provided one is small for Bi-CG */
     maxiter = MAX(maxiter, MAX_ITER_THRESHOLD);
@@ -205,7 +205,7 @@ int bi_conj_grad(double **A, cs *C, double *x, double *b, double *M, int dimensi
     b_norm = norm2(b, dimension);
     /* Set b_norm = 1 in case it's zero to avoid seg fault */
     b_norm = b_norm == 0.0 ? 1.0 : b_norm;
-    
+
     while (iter < maxiter && (r_norm / b_norm) > itol) {
         iter++;
         /* Solution of the preconditioner Mz = r */
@@ -275,11 +275,11 @@ int bi_conj_grad(double **A, cs *C, double *x, double *b, double *M, int dimensi
     return iter;
 }
 
-/* 
+/*
  * Solve the complex system with the iterative bi-conjugate gradient method
  * store the result in vector x and also return the number of iterations
  * or FAILURE in case it fails
- */ 
+ */
 int complex_bi_conj_grad(gsl_matrix_complex *A, cs_ci *C,  gsl_vector_complex *x, gsl_vector_complex *b,
                           gsl_vector_complex *M, gsl_vector_complex *M_conj, int dimension, double itol,
                          int maxiter, bool SPARSE) {
@@ -311,7 +311,7 @@ int complex_bi_conj_grad(gsl_matrix_complex *A, cs_ci *C,  gsl_vector_complex *x
         /* Compute A*x and store it to Ax */
         gsl_blas_zgemv(CblasNoTrans, GSL_COMPLEX_ONE, A, x, GSL_COMPLEX_ZERO, Ax);
     }
-    
+
     /* Compute r = b - Ax */
     /* Computes the y = ax + b, we want r = -Ax + b */
     complex_axpy(r, GSL_COMPLEX_NEGONE, Ax, b, dimension);
@@ -367,7 +367,7 @@ int complex_bi_conj_grad(gsl_matrix_complex *A, cs_ci *C,  gsl_vector_complex *x
         }
         /* omega = p_tilde * q */
         omega = complex_dot_product(p_tilde, q, dimension);
-        
+
         /* Check for Algorithm Failure */
         if (complex_abs(omega) < EPSILON) {
             return -1;

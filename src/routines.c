@@ -421,7 +421,7 @@ void cs_complex_to_gsl(gsl_vector_complex *dst, cs_complex_t *src, int dimension
     }
 }
 
-/* 
+/*
  * Returns the complex conjugate of the gsl complex number x without
  * putting a negative sign in case there is 0 in imaginary part.
  */
@@ -437,7 +437,7 @@ gsl_complex __gsl_complex_conj(gsl_complex x) {
     return z;
 }
 
-/* 
+/*
  * Returns the complex negative of the gsl complex number x without
  * putting a negative sign in case there is 0 in imaginary part.
  */

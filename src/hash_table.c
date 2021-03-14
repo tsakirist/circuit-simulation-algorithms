@@ -30,7 +30,7 @@ hash_table_t *ht_create(int size) {
     }
     hash_table->size = size;
     hash_table->seq  = 1;
-    return hash_table;    
+    return hash_table;
 }
 
 /* Hash a string for a particular hash table */

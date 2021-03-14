@@ -24,7 +24,7 @@ typedef struct options {
 } options_t;
 
 
-/* 
+/*
  * Struct to hold the information of netlists, such as
  * number of nodes, number of group2 elements and
  * number of dc analysis targets
@@ -75,7 +75,7 @@ typedef struct ac_analysis {
     int num_nodes;
 } ac_analysis_t;
 
-/* 
+/*
  * Struct to hold all the previous values, so that we are able
  * to return all the information we read in the netlist
  */

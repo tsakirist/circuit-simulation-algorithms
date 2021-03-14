@@ -10,7 +10,7 @@
 #define SUCCESS  1
 #define FAILURE -1
 
-/* 
+/*
  * List1 will contain the following elements:
  * R: Resistance,
  * C: Capacitance,
@@ -30,7 +30,7 @@ typedef struct list1 {
     struct list1 *prev;
 } list1_t;
 
-/* 
+/*
  * List2 will contain the following elements:
  * M: MOSFET,
  * Q: BJT,
@@ -44,7 +44,7 @@ typedef struct list2 {
     char *probe3;
     char *probe4;
     int model_name;
-    int area;    
+    int area;
     long double length;
     long double width;
     struct list2 *next;

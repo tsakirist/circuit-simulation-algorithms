@@ -33,10 +33,10 @@ int main(int argc, char *argv[]) {
 
     /* Initialize the MNA_system */
     mna_system_t *mna = init_mna_system(parser->netlist->num_nodes, parser->netlist->num_g2_elem, parser->options, parser->netlist->nz);
-    
+
     /* Create the MNA system */
     create_mna_system(mna, index, hash_table, parser->options, parser->tr_analysis->time_step, parser->netlist->num_nodes);
-    
+
     /* Dimension of MNA system */
     int dimension = parser->netlist->num_nodes + parser->netlist->num_g2_elem;
 
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
 
     /* DC Operating Point to file */
     dc_operating_point(hash_table, sol_x);
-    
+
     /* Hold DC operating point values for transient and ac analyses */
     memcpy(dc_op, sol_x, mna->dimension * sizeof(double));
 

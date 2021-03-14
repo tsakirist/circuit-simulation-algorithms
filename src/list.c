@@ -60,7 +60,7 @@ int add_to_list(index_t *index, char **tokens, hash_table_t *hash_table) {
 void set_nz(char type, char probe1, char probe2) {
     int mul = 1;
     if (probe1 == '0' || probe2 == '0') {
-        mul = 0;        
+        mul = 0;
     }
     if (type == 'r' || type == 'R') {
         nz += 3*mul + 1;

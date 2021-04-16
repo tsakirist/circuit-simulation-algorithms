@@ -25,10 +25,10 @@ SOURCES = $(wildcard $(SRC)/*.c)
 OBJECTS = $(patsubst $(SRC)/%.c,$(OBJ)/%.o,$(SOURCES))
 
 main: $(OBJECTS)
-	$(CC) $(CFLAGS) $^ $(GSLFLAGS) -o $@ $(DBGFLAGS) $(CSX_LIB)
+	$(CC) $(CFLAGS) $(OPTFLAGS) $^ $(GSLFLAGS) -o $@ $(DBGFLAGS) $(CSX_LIB)
 
 $(OBJ)/%.o: $(SRC)/%.c
-	$(CC) $(CFLAGS) -I$(SRC) -c $< $(GSLFLAGS) -o $@ $(DBGFLAGS)
+	$(CC) $(CFLAGS) $(OPTFLAGS) -I$(SRC) -c $< $(GSLFLAGS) -o $@ $(DBGFLAGS)
 
 debug: DBGFLAGS = -DDEBUGL -DDEBUGH
 debug: main

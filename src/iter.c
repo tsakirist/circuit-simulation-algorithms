@@ -17,7 +17,10 @@ int conj_grad(double **A, cs *C, double *x, double *b, double *M, int dimension,
     double *z  = (double *)malloc(dimension * sizeof(double));
     double *p  = (double *)malloc(dimension * sizeof(double));
     double *q  = (double *)malloc(dimension * sizeof(double));
+
     double r_norm, b_norm, rho, rho1, alpha, beta;
+    r_norm = b_norm = rho = rho1 = alpha = beta = 0.0;
+
     int iter = 0;
 
     if (!SPARSE) {
@@ -182,7 +185,9 @@ int bi_conj_grad(double **A, cs *C, double *x, double *b, double *M, int dimensi
     double *z_tilde = (double *)malloc(dimension * sizeof(double));
     double *p_tilde = (double *)malloc(dimension * sizeof(double));
     double *q_tilde = (double *)malloc(dimension * sizeof(double));
+
     double r_norm, b_norm, rho, rho1, alpha, beta, omega;
+    r_norm = b_norm = rho = rho1 = alpha = beta = omega = 0.0;
     int iter = 0;
 
     if (SPARSE) {

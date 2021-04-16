@@ -22,8 +22,9 @@ mna_system_t *init_mna_system(int num_nodes, int num_g2_elem, options_t *options
     }
 
     mna->resp = NULL;
+
     /* Set the preconditioner pointers to NULL */
-    mna->M       = mna->M_trans   = NULL; 
+    mna->M    = mna->M_trans   = NULL;
     mna->M_ac = mna->M_ac_conj = NULL;
 
     /* In case we will use iterative methods allocate memory for the prerequisites */
@@ -39,7 +40,7 @@ mna_system_t *init_mna_system(int num_nodes, int num_g2_elem, options_t *options
         }
     }
 
-    /* 
+    /*
      * In case netlist has .TRAN, allocate the resp_t struct that holds the transient response or DC value
      * and the nodes that contribute to it. It's the same for dense and sparse matrices.
      */
@@ -174,7 +175,7 @@ void create_ac_mna_system(mna_system_t *mna, index_t *index, hash_table_t *hash_
 /* Constructs the dense MNA system */
 void create_dense_mna(mna_system_t *mna, index_t *index, hash_table_t *hash_table, options_t *options, int offset) {
     list1_t *curr;
-    double value;
+    double value = 0.0;
     int volt_sources_cnt = 0;
 
     for (curr = index->head1; curr != NULL; curr = curr->next) {
@@ -188,10 +189,10 @@ void create_dense_mna(mna_system_t *mna, index_t *index, hash_table_t *hash_tabl
         else if (curr->type == 'R' || curr->type == 'r') {
             value = 1 / curr->value;
             if (probe1_id == 0) {
-                mna->matrix->A[j][j] += value; 
+                mna->matrix->A[j][j] += value;
             }
             else if (probe2_id == 0) {
-                mna->matrix->A[i][i] += value; 
+                mna->matrix->A[i][i] += value;
             }
             else {
                 mna->matrix->A[i][i] += value;
@@ -229,7 +230,7 @@ void create_dense_mna(mna_system_t *mna, index_t *index, hash_table_t *hash_tabl
             if (probe1_id == 0) {
                 mna->matrix->A[j][offset + volt_sources_cnt] = -1.0;
                 mna->matrix->A[offset + volt_sources_cnt][j] = -1.0;
-                mna->b[offset + volt_sources_cnt] += value; 
+                mna->b[offset + volt_sources_cnt] += value;
             }
             else if (probe2_id == 0) {
                 mna->matrix->A[i][offset + volt_sources_cnt] = 1.0;
@@ -475,7 +476,7 @@ void create_dense_ac_mna(mna_system_t *mna, index_t *index, hash_table_t *hash_t
 /* Constructs the sparse MNA system */
 void create_sparse_mna(mna_system_t *mna, index_t *index, hash_table_t *hash_table, options_t *options, int offset) {
     list1_t *curr;
-    double value;
+    double value = 0.0;
     int volt_sources_cnt = 0;
 
     for (curr = index->head1; curr != NULL; curr = curr->next) {
@@ -529,7 +530,7 @@ void create_sparse_mna(mna_system_t *mna, index_t *index, hash_table_t *hash_tab
             if (probe1_id == 0) {
                 cs_di_entry(mna->sp_matrix->A, j, offset + volt_sources_cnt, -1.0);
                 cs_di_entry(mna->sp_matrix->A, offset + volt_sources_cnt, j, -1.0);
-                mna->b[offset + volt_sources_cnt] += value; 
+                mna->b[offset + volt_sources_cnt] += value;
             }
             else if (probe2_id == 0) {
                 cs_di_entry(mna->sp_matrix->A, i, offset + volt_sources_cnt,  1.0);
@@ -665,7 +666,7 @@ void create_sparse_trans_mna(mna_system_t *mna, index_t *index, hash_table_t *ha
         /* Free what is no longer needed */
         cs_spfree(mna->sp_matrix->hC);
     }
-    
+
     if (options->ITER) {
         /* Compute the M preconditioner */
         jacobi_precond(mna->M_trans, NULL, mna->sp_matrix->aGhC, mna->dimension, options->SPARSE);
@@ -676,7 +677,7 @@ void create_sparse_trans_mna(mna_system_t *mna, index_t *index, hash_table_t *ha
 void create_sparse_ac_mna(mna_system_t *mna, index_t *index, hash_table_t *hash_table, options_t *options, int offset, double omega) {
     list1_t *curr;
     int volt_sources_cnt = 0;
-    
+
     /*
      * We need to free everytime the G_ac matrix because in every sweep step we convert the A_base
      * into a complex sparse matrix G_ac. Thus, every time the last pointer value would be lost.
@@ -838,7 +839,7 @@ void solve_mna_system(mna_system_t *mna, double **x, gsl_vector_complex *x_compl
                                                       maxiter, options->SPARSE);
                 }
                 else {
-                    iterations = bi_conj_grad(NULL, matrix_ptr, *x, mna->b, M_precond, mna->dimension, 
+                    iterations = bi_conj_grad(NULL, matrix_ptr, *x, mna->b, M_precond, mna->dimension,
                                                 options->ITOL, maxiter, options->SPARSE);
                 }
                 if (iterations == FAILURE) {
@@ -905,7 +906,7 @@ void solve_mna_system(mna_system_t *mna, double **x, gsl_vector_complex *x_compl
             if (options->SPD) {
                 /* Check if AC analysis has started (complex), otherwise call ordinary solvers */
                 if (mna->ac_analysis_init) {
-                    iterations = complex_conj_grad(mna->matrix->G_ac, NULL, x_complex, mna->matrix->e_ac, mna->M_ac, 
+                    iterations = complex_conj_grad(mna->matrix->G_ac, NULL, x_complex, mna->matrix->e_ac, mna->M_ac,
                                                    mna->dimension, options->ITOL, maxiter, options->SPARSE);
                 }
                 else {
@@ -921,14 +922,14 @@ void solve_mna_system(mna_system_t *mna, double **x, gsl_vector_complex *x_compl
                                                          mna->M_ac_conj, mna->dimension, options->ITOL, maxiter, options->SPARSE);
                 }
                 else {
-                    iterations = bi_conj_grad(matrix_ptr, NULL, *x, mna->b, M_precond, mna->dimension, 
+                    iterations = bi_conj_grad(matrix_ptr, NULL, *x, mna->b, M_precond, mna->dimension,
                                               options->ITOL, maxiter, options->SPARSE);
                 }
                 if (iterations == FAILURE) {
                     fprintf(stderr, "Bi-Conjugate gradient method failed.\n");
                     exit(EXIT_FAILURE);
                 }
-                else if ((maxiter < MAX_ITER_THRESHOLD && iterations == MAX_ITER_THRESHOLD) || 
+                else if ((maxiter < MAX_ITER_THRESHOLD && iterations == MAX_ITER_THRESHOLD) ||
                          (maxiter > MAX_ITER_THRESHOLD && iterations == maxiter)) {
                     printf("Bi-Conjugate gradient reached max iterations without convergence.\n");
                 }
@@ -1332,7 +1333,7 @@ void free_mna_system(mna_system_t **mna, options_t *options) {
             gsl_matrix_complex_free((*mna)->matrix->G_ac);
             gsl_vector_complex_free((*mna)->matrix->e_ac);
         }
-        
+
         /* Free the A_base in case it exists */
         if (options->TRAN || options->AC) {
             free((*mna)->matrix->A_base[0]);
